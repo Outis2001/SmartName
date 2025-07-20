@@ -3,7 +3,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from src.utils import gemma,gemma_post_processing,gemma_decsription,gemma_preprocess,RAG
+from backend.src.utils import gemma,gemma_post_processing,gemma_decsription,gemma_preprocess,RAG,multi_description
+
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 app = FastAPI()
 
 
@@ -56,6 +59,8 @@ async def generate_domains_endpoint(prompt: Prompt):
 
 
     domain_names=gemma_post_processing(output)   # for  Gemma
+
+    multi_description(prompt.prompt, domain_names)
 
     return {"domains": domain_names}
 

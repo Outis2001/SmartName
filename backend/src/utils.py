@@ -140,6 +140,19 @@ def gemma_decsription(domain_name: str, prompt: str):
     response = [{"generated_text": output}]
     return response[0]['generated_text'],domain_name
 
+def create_input_list(prompt, domain_names):
+    input_list = []
+    for name in domain_names:
+        input_list.append((name, prompt))
+    return input_list
+
+def multi_description(prompt, domain_names):
+    import multiprocessing
+    input_data = create_input_list(prompt, domain_names)
+    with multiprocessing.Pool() as pool:
+        results = pool.starmap(gemma_decsription, input_data)
+    print(results)
+    return results
 
 def gemma_preprocess(llm_output,domain_name):
     try:
